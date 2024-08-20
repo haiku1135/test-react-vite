@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* bodyのスタイルをリセットまたは上書き */
+body {
+  margin: 0 !important;
+  display: block !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  max-width: 100% !important;
+}

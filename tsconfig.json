@@ -22,7 +22,7 @@
     "noFallthroughCasesInSwitch": true,
 
     /* テスト環境のための追加設定 */
-    "types": ["jest", "@testing-library/jest-dom"],
+    "types": ["jest", "@testing-library/jest-dom", "node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

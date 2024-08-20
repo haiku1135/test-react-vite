@@ -1,3 +1,8 @@
+# 今わからない事
+react-router-domのuseNavigateの使い方
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
