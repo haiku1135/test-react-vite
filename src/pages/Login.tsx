@@ -34,7 +34,6 @@ const DEFAULT_VALUES: LoginFormData = {
 export const LogIn = () => {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies();
-  // react-hook-formのuseFormを使用
   const {
     handleSubmit,
     register,
@@ -49,7 +48,6 @@ export const LogIn = () => {
   // ログインボタンを押した時の処理
   const onSubmit = async(data: LoginFormData) => {
     const { email, password } = data;
-    console.log(email, password);
     // ログイン処理を行う
     await axios
     .post(`${url}/signin`, {
