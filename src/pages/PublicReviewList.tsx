@@ -1,19 +1,11 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { url } from '../const';
+import { usePublicReview } from '../context/PublicReviewsContext';
 import { Pagination } from '../components/Pagination';
 
 export const PublicReviewList = () => {
-  const [reviews, setReviews] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const getReviews = async () => {
-    const res = await axios.get(`${url}/public/books?offset=${offset}`);
-    setReviews(res.data);
-  };
-  useEffect(() => {
-    getReviews();
-    console.log(offset);
-  }, [offset]);
+  const { reviews, offset, setOffset, loading, error } = usePublicReview();
+
+  if (loading) return <div>読み込み中...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="max-w-2xl mx-auto mt-16">

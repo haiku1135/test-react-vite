@@ -5,10 +5,14 @@ import { SignUp } from './pages/SignUp';
 import { User } from './pages/User';
 import { Home } from './pages/Home';
 import { PublicReviewList } from './pages/PublicReviewList';
+import { Profile } from './pages/Profile';
+import  { PublicReviewProvider }  from './context/PublicReviewsContext';
+
 function App() {
   
 
   return (
+    <PublicReviewProvider>
     <Router>
       <Header />
       <Routes>
@@ -16,10 +20,11 @@ function App() {
         <Route path="/login" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/user" element={<User />} />
-        <Route path="/public/books" element={<PublicReviewList />} />
-      </Routes>
-      
-    </Router>
+          <Route path="/public/books" element={<PublicReviewList />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </Router>
+    </PublicReviewProvider>
   )
 }
 

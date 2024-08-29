@@ -55,8 +55,6 @@ export const LogIn = () => {
       password,
     })
     .then((res) => {
-      console.log(res.status);
-      console.log(res.data);
       setCookie('token', res.data.token);
       navigate('/');
     })

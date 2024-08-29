@@ -12,6 +12,7 @@ export const Header = () => {
           <li><Link to="/signup" className='text-theme-dark'>新規登録</Link></li>
           <li><Link to="/user" className='text-theme-dark'>ユーザー</Link></li>
           <li><Link to="/public/books" className='text-theme-dark'>レビュー一覧</Link></li>
+          <li><Link to="/profile" className='text-theme-dark'>ユーザー情報編集</Link></li>
         </ul>
       </nav>
     </header>

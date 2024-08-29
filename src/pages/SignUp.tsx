@@ -87,7 +87,6 @@ export const SignUp = () => {
         });
       }
       navigate('/');
-      console.log(data);
       reset();
     } catch(err){
       if (axios.isAxiosError(err) && err.response) {
