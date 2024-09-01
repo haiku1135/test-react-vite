@@ -1,11 +1,13 @@
 import "../styles/global.css";
-import { useForm } from 'react-hook-form';
+import { useCookies } from 'react-cookie';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useEffect } from 'react';
 import { url } from "../const";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import { useAuth } from '../context/AuthContext';
+import { useForm } from "react-hook-form";
 
 // zodでバリデーションを行う
 const schema = z.object({
@@ -33,6 +35,7 @@ const DEFAULT_VALUES: LoginFormData = {
 
 export const LogIn = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [cookies, setCookie, removeCookie] = useCookies();
   const {
     handleSubmit,
@@ -44,7 +47,16 @@ export const LogIn = () => {
     defaultValues: DEFAULT_VALUES,
     mode: 'onChange',
   });
-
+  // トークンがある場合はホーム画面にリダイレクト
+  const checkToken = () => {
+    const token = cookies.token;
+    if(token){
+      navigate('/');
+    }
+  }
+  useEffect(() => {
+    checkToken();
+  }, []);
   // ログインボタンを押した時の処理
   const onSubmit = async(data: LoginFormData) => {
     const { email, password } = data;
@@ -56,6 +68,7 @@ export const LogIn = () => {
     })
     .then((res) => {
       setCookie('token', res.data.token);
+      setIsAuthenticated(true);
       navigate('/');
     })
     .catch((err) => {

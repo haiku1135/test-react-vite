@@ -1,6 +1,6 @@
 import "../styles/global.css";
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { url } from "../const";
@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import Compressor from 'compressorjs';
+import { useAuth } from '../context/AuthContext';
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 
@@ -49,8 +50,19 @@ const DEFAULT_VALUES: SignUpFormData = {
 
 export const SignUp = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [cookies, setCookie, removeCookie] = useCookies();
   const [iconPreview, setIconPreview] = useState<string | null>(null);
+  // トークンがある場合はホーム画面にリダイレクト
+  const checkToken = () => {
+    const token = cookies.token;
+    if(token){
+      navigate('/');
+    }
+  }
+  useEffect(() => {
+    checkToken();
+  }, []);
   // react-hook-formのuseFormを使用
   const {
     handleSubmit,
@@ -75,6 +87,7 @@ export const SignUp = () => {
       });
       const token = userResponse.data.token;
       setCookie("token", token);
+      setIsAuthenticated(true);
 
       if (data.icon) {
         const formData = new FormData();
@@ -91,6 +104,7 @@ export const SignUp = () => {
     } catch(err){
       if (axios.isAxiosError(err) && err.response) {
         console.log(err.response.data);
+        setIsAuthenticated(false);
       }
     }
 
