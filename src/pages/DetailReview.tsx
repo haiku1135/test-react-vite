@@ -30,21 +30,21 @@ export const DetailReview = () => {
   const [error, setError] = useState<string | null>(null);
   // レビューのIDを取得
   const { id } = useParams();
+  const fetchReview = async () => {
+    try {
+      const res = await axios.get(`${url}/books/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setReview(res.data);
+      setLoading(false);
+    } catch (err: any) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchReview = async () => {
-      try {
-        const res = await axios.get(`${url}/books/${id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        setReview(res.data);
-        setLoading(false);
-      } catch (err: any) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
     fetchReview();
   }, [id, token]);
 

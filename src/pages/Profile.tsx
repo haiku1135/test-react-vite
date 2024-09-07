@@ -13,18 +13,7 @@ export const Profile = () => {
   const navigate = useNavigate();
   const [cookies] = useCookies(['token']);
   const queryClient = useQueryClient();
-  // const getUser = async () => {
-  //   try{
-  //     const res = await axios.get(`${url}/users`, {
-  //       headers: {
-  //         'Authorization': `Bearer ${cookies.token}`
-  //       }
-  //     })
-  //     setName(res.data.name)
-  //   } catch (error) {
-  //     navigate('/login');
-  //   }
-  // }
+
   const query = useQuery({
     queryKey: queryKeys.user,
     queryFn: () => axios.get(`${url}/users`, {
