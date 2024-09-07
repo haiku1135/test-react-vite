@@ -4,14 +4,13 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-
+import { useQuery } from '@tanstack/react-query';
+import { queryKeys } from '../queryKeys';
 export const User = () => {
   const [name, setName] = useState('');
   const [iconUrl, setIconUrl] = useState('');
   const navigate = useNavigate();
   const [cookies] = useCookies(['token']);
-  
-
   const getUser = async () => {
     try {
       const token = cookies.token;
@@ -31,11 +30,18 @@ export const User = () => {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         console.error('認証エラー：', error);
         navigate('/login');
+        return { name: '', iconUrl: '' };
       } else {
         console.error('ユーザー情報の取得に失敗しました：', error);
+        return { name: '', iconUrl: '' };
       }
     }
-  }
+  };
+  const query = useQuery({
+    queryKey: queryKeys.user,
+    queryFn: getUser,
+  });
+
 
   useEffect(() => {
     getUser();

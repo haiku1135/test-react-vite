@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(cookies.token);
   // 認証状態を保持するstate
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
   const updateToken = (newToken: string | null) => {
     // トークンがある場合はクッキーに保存
     if(newToken) {

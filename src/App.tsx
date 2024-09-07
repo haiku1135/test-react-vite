@@ -12,27 +12,31 @@ import { ReviewList } from './pages/ReviewList';
 import { PostReview } from './pages/PostReview';
 import { DetailReview } from './pages/DetailReview';
 import { EditReview } from './pages/EditReview';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './queryClient';
 
 function App() {
   return (
     <AuthProvider>
-      <PublicReviewProvider>
-        <Router>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<LogIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/user" element={<User />} />
-            <Route path="/public/books" element={<PublicReviewList />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/books" element={<ReviewList />} />
-            <Route path="/new" element={<PostReview />} />
-            <Route path="/detail/:id" element={<DetailReview />} />
-            <Route path="/edit/:id" element={<EditReview />} />
-          </Routes>
-        </Router>
-      </PublicReviewProvider>
+      <QueryClientProvider client={queryClient}>
+        <PublicReviewProvider>
+          <Router>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<LogIn />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/user" element={<User />} />
+              <Route path="/public/books" element={<PublicReviewList />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/books" element={<ReviewList />} />
+              <Route path="/new" element={<PostReview />} />
+              <Route path="/detail/:id" element={<DetailReview />} />
+              <Route path="/edit/:id" element={<EditReview />} />
+            </Routes>
+          </Router>
+        </PublicReviewProvider>
+      </QueryClientProvider>
     </AuthProvider>
   )
 }

@@ -40,7 +40,7 @@ export const DetailReview = () => {
         });
         setReview(res.data);
         setLoading(false);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
         setLoading(false);
       }

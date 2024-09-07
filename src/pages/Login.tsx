@@ -51,7 +51,7 @@ export const LogIn = () => {
   const checkToken = () => {
     const token = cookies.token;
     if(token){
-      navigate('/');
+      navigate('/public/books');
     }
   }
   useEffect(() => {

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import Compressor from 'compressorjs';
 import { useAuth } from '../context/AuthContext';
+import { useQueryClient } from '@tanstack/react-query';
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 
@@ -49,6 +50,7 @@ const DEFAULT_VALUES: SignUpFormData = {
 
 
 export const SignUp = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -88,7 +90,6 @@ export const SignUp = () => {
       const token = userResponse.data.token;
       setCookie("token", token);
       setIsAuthenticated(true);
-
       if (data.icon) {
         const formData = new FormData();
         formData.append('icon', data.icon);

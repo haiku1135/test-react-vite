@@ -5,7 +5,7 @@ import { url } from '../const';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const schema = z.object({
   title: z.string().min(1, 'タイトルを入力してください').max(50, '50文字以内で入力してください'),
@@ -25,27 +25,35 @@ const DEFAULT_VALUES: PostReviewFormData = {
 
 export const PostReview = () => {
   const navigate = useNavigate();
-  const { handleSubmit, register, reset, formState: { errors } } = useForm<PostReviewFormData>({
+  const { handleSubmit, register, formState: { errors } } = useForm<PostReviewFormData>({
     resolver: zodResolver(schema),
     defaultValues: DEFAULT_VALUES,
     mode: 'onChange',
   });
   const [cookies] = useCookies(['token']);
   const token = cookies.token;
-  const onSubmit = async (data: PostReviewFormData) => {
-    try {
-      const res = await axios.post(`${url}/books`, data, {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (data: PostReviewFormData) => 
+      axios.post(`${url}/books`, data, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
-      });
-      console.log(res.data);
-      reset();
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['books'] });
       navigate('/public/books');
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('レビューの投稿に失敗しました:', error);
     }
-  }
+  });
+
+  const onSubmit = (data: PostReviewFormData) => {
+    mutation.mutate(data);
+  };
+
   return (
     <main className='max-w-screen-md mx-auto mt-16'>
       <h2 className='text-2xl font-bold mb-8'>レビュー投稿</h2>
@@ -93,5 +101,5 @@ export const PostReview = () => {
         <button type="submit" className='bg-primary text-white px-4 py-2 rounded-md mt-8'>投稿</button>
       </form>
     </main>
-  )
-}
+  );
+};

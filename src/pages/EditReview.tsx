@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 const schema = z.object({
   title: z.string().min(1, 'タイトルを入力してください').max(50, '50文字以内で入力してください'),
   url: z.string().url('正しいURLを入力してください'),
@@ -46,32 +48,42 @@ export const EditReview = () => {
     values: book, // デフォルト値としてbookオブジェクトを使用
     mode: 'onChange',
   });
-  const onSubmit = async (data: EditReviewFormData) => {
-    try {
-      const res = await axios.put(`${url}/books/${id}`, data, {
+  const queryClient = useQueryClient();
+  const putMutation = useMutation({
+    mutationFn: (data: EditReviewFormData) => 
+      axios.put(`${url}/books/${id}`, data, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
-      });
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['books'] });
       navigate(`/detail/${id}`);
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('レビューの編集に失敗しました:', error);
     }
+  });
+  const onSubmit = async (data: EditReviewFormData) => {
+    putMutation.mutate(data);
   };
-  const handleDelete = async () => {
-    try {
-      const res = await axios.delete(`${url}/books/${id}`, {
-        data: {
-          id: id
-        },
+  const deleteMutation = useMutation({
+    mutationFn: () => 
+      axios.delete(`${url}/books/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
-      });
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['books'] });
       navigate('/public/books');
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('レビューの削除に失敗しました:', error);
     }
+  });
+  const handleDelete = async () => {
+    deleteMutation.mutate();
   }
   return (
     <main className='max-w-screen-md mx-auto mt-16'>

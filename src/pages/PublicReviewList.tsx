@@ -1,16 +1,17 @@
+import axios from 'axios';
+import { url } from '../const';
+import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import { usePublicReview } from '../context/PublicReviewsContext';
 import { Pagination } from '../components/Pagination';
-import { Link } from 'react-router-dom';
-import { url } from '../const';
-import axios from 'axios';
-import { useCookies } from 'react-cookie';
+
 
 export const PublicReviewList = () => {
   const { reviews, offset, setOffset, loading, error } = usePublicReview();
+  const [cookies] = useCookies(['token']);
 
   const selectBookIdSubmit = async(e: React.MouseEvent<HTMLAnchorElement>) => {
     const selectBookId = e.currentTarget.getAttribute('data-book-id');
-    const [cookies] = useCookies(['token']);
     const token = cookies.token;
     try {
       const res = await axios.post(`${url}/logs`, {
@@ -19,12 +20,12 @@ export const PublicReviewList = () => {
         headers: {
           'Authorization': `Bearer ${token}`
         }
-      })
-      console.log(res.data);
+      });
     } catch (err) {
       console.error('ログの投稿に失敗しました:', err);
     }
-  }
+  };
+
 
 
   if (loading) return <div className='max-w-2xl mx-auto mt-16'>読み込み中...</div>;
@@ -37,7 +38,7 @@ export const PublicReviewList = () => {
       <ul className='flex flex-col gap-4 max-w-2xl mx-auto'>
         {reviews.map((review: { id: string; title: string; url: string; detail: string; review: string; reviewer:string}) => (
           <li key={review.id} className='flex flex-col border-2 border-gray-300 p-4 rounded-sm'>
-            <Link to={`/detail/${review.id}`} className='text-primary' onClick={selectBookIdSubmit}>
+            <Link to={`/detail/${review.id}`} className='text-primary' onClick={selectBookIdSubmit} data-book-id={review.id}>
               <h3 className='text-lg font-bold text-black'>タイトル: {review.title}</h3>
               <p className='w-full break-words truncate'>URL: {review.url}</p>
               <p className='w-full text-black truncate'>詳細: {review.detail}</p>
